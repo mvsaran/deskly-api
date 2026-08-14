@@ -1,0 +1,9 @@
+$kind: http-request
+name: Get desk
+description: Fetch a single desk by ID
+url: 'http://localhost:4000/desks/desk-1'
+method: GET
+headers:
+  - key: X-API-Key
+    value: demo-key
+order: 1786688401000

@@ -1,0 +1,9 @@
+$kind: http-request
+name: Delete booking
+description: Release a desk by deleting a booking
+url: 'http://localhost:4000/bookings/booking-1'
+method: DELETE
+headers:
+  - key: X-API-Key
+    value: demo-key
+order: 1786688405000

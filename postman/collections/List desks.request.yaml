@@ -1,0 +1,13 @@
+$kind: http-request
+name: List desks
+description: List all desks, optionally filtered by zone
+url: 'http://localhost:4000/desks'
+method: GET
+headers:
+  - key: X-API-Key
+    value: demo-key
+query:
+  - key: zone
+    value: ''
+    disabled: true
+order: 1786688400000

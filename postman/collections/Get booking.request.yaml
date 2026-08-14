@@ -1,0 +1,9 @@
+$kind: http-request
+name: Get booking
+description: Fetch a single booking by ID
+url: 'http://localhost:4000/bookings/booking-1'
+method: GET
+headers:
+  - key: X-API-Key
+    value: demo-key
+order: 1786688404000

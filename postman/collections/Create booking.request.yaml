@@ -1,0 +1,19 @@
+$kind: http-request
+name: Create booking
+description: Reserve a desk for a date
+url: 'http://localhost:4000/bookings'
+method: POST
+headers:
+  - key: X-API-Key
+    value: demo-key
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "deskId": "desk-1",
+      "date": "2026-08-15",
+      "userId": "user-123"
+    }
+order: 1786688403000
