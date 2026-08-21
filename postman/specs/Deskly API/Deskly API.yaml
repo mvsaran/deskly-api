@@ -1,0 +1,136 @@
+openapi: 3.0.0
+info:
+  title: Deskly API
+  description: API for managing desks and bookings
+  version: 1.0.0
+servers:
+  - url: http://localhost:4000
+    description: Development server
+paths:
+  /health:
+    get:
+      summary: Health check
+      description: Check the health status of the API
+      operationId: healthCheck
+      responses:
+        '200':
+          description: API is healthy
+  /desks:
+    get:
+      summary: List desks
+      description: List all desks, optionally filtered by zone
+      operationId: listDesks
+      parameters:
+        - name: zone
+          in: query
+          description: Filter desks by zone
+          schema:
+            type: string
+      security:
+        - ApiKeyAuth: []
+      responses:
+        '200':
+          description: List of desks
+  /desks/{deskId}:
+    get:
+      summary: Get desk
+      description: Fetch a single desk by ID
+      operationId: getDesk
+      parameters:
+        - name: deskId
+          in: path
+          required: true
+          description: The desk ID
+          schema:
+            type: string
+      security:
+        - ApiKeyAuth: []
+      responses:
+        '200':
+          description: Desk details
+  /bookings:
+    get:
+      summary: List bookings
+      description: List bookings, optionally filtered by date or deskId
+      operationId: listBookings
+      parameters:
+        - name: date
+          in: query
+          description: Filter bookings by date
+          schema:
+            type: string
+        - name: deskId
+          in: query
+          description: Filter bookings by desk ID
+          schema:
+            type: string
+      security:
+        - ApiKeyAuth: []
+      responses:
+        '200':
+          description: List of bookings
+    post:
+      summary: Create booking
+      description: Reserve a desk for a date
+      operationId: createBooking
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                deskId:
+                  type: string
+                date:
+                  type: string
+                userId:
+                  type: string
+              required:
+                - deskId
+                - date
+                - userId
+      responses:
+        '201':
+          description: Booking created successfully
+  /bookings/{bookingId}:
+    get:
+      summary: Get booking
+      description: Fetch a single booking by ID
+      operationId: getBooking
+      parameters:
+        - name: bookingId
+          in: path
+          required: true
+          description: The booking ID
+          schema:
+            type: string
+      security:
+        - ApiKeyAuth: []
+      responses:
+        '200':
+          description: Booking details
+    delete:
+      summary: Delete booking
+      description: Release a desk by deleting a booking
+      operationId: deleteBooking
+      parameters:
+        - name: bookingId
+          in: path
+          required: true
+          description: The booking ID
+          schema:
+            type: string
+      security:
+        - ApiKeyAuth: []
+      responses:
+        '204':
+          description: Booking deleted successfully
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
