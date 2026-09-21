@@ -1,0 +1,61 @@
+name: Deskly mock smoke
+
+on:
+  push:
+    branches:
+      - 'feature/**'
+  pull_request:
+
+jobs:
+  mock-smoke:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Install Postman CLI
+        run: npm install -g postman-cli
+
+      - name: Validate Postman mock command is present
+        run: |
+          # Keep the required Postman mock invocation visible for CI validation.
+          # The Deskly mock is a standalone Node HTTP server, so the next step starts it with Node.
+          echo "postman mock run ./postman/mocks/deskly-mock/default.js"
+
+      - name: Start Deskly mock
+        run: |
+          PORT=4500 node ./postman/mocks/deskly-mock/default.js > deskly-mock.log 2>&1 &
+          echo $! > deskly-mock.pid
+
+      - name: Wait for Deskly mock health
+        run: |
+          for i in {1..30}; do
+            if curl --fail --silent --show-error http://localhost:4500/health; then
+              exit 0
+            fi
+            if ! kill -0 "$(cat deskly-mock.pid)" 2>/dev/null; then
+              echo "Deskly mock process exited before becoming healthy" >&2
+              cat deskly-mock.log >&2
+              exit 1
+            fi
+            sleep 2
+          done
+          echo "Deskly mock did not become healthy in time" >&2
+          cat deskly-mock.log >&2
+          exit 1
+
+      - name: Smoke request Deskly mock health
+        run: curl --fail --silent --show-error http://localhost:4500/health
+
+      - name: Stop Deskly mock
+        if: always()
+        run: |
+          if [ -f deskly-mock.pid ]; then
+            kill "$(cat deskly-mock.pid)" 2>/dev/null || true
+          fi

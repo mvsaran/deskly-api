@@ -1,0 +1,10 @@
+{
+  "name": "deskly-mock",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Local Deskly coded mock for Postman CLI smoke tests.",
+  "main": "default.js",
+  "scripts": {
+    "start": "node default.js"
+  }
+}
