@@ -1,0 +1,22 @@
+name: Deskly Local Mock
+version: 1.0.0
+port: 4500
+entrypoint: default.js
+scenarios:
+  - file: deskly-scenario.js
+    name: Deskly happy path
+routes:
+  - method: GET
+    path: /health
+  - method: GET
+    path: /desks
+  - method: GET
+    path: /desks/{deskId}
+  - method: GET
+    path: /bookings
+  - method: POST
+    path: /bookings
+  - method: GET
+    path: /bookings/{bookingId}
+  - method: DELETE
+    path: /bookings/{bookingId}
